@@ -73,15 +73,22 @@ while True:
     tree4 = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
     
     # Write four lines of text.
-    y = top
-    draw.text((x, y), tree[0].text_content(), font=font, fill="#FFFFFF")
+    y = top+5
+    draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
+    y += font.getsize("CORONAVIRUS")[1]
+    draw.text((x, y), "TRACKER", font=font, fill="#FFFFFF")
+    y += font.getsize("TRACKER")[1] + 10
+    draw.text((x, y), "Total: "+tree[0].text_content(), font=font, fill="#FFFF00")
     y += font.getsize(tree[0].text_content())[1]
-    draw.text((x, y), tree2[0].text_content(), font=font, fill="#FFFF00")
+    draw.text((x, y), "Dead: "+tree2[0].text_content(), font=font, fill="#FF0000")
     y += font.getsize(tree2[0].text_content())[1]
-    draw.text((x, y), tree3[0].text_content(), font=font, fill="#00FF00")
+    draw.text((x, y), "US Cases: "+tree3[0].text_content(), font=font, fill="#FFa500")
     y += font.getsize(tree3[0].text_content())[1]
-    draw.text((x, y), tree4[0].text_content(), font=font, fill="#0000FF")
-   
+    draw.text((x, y), "US Open Tests: "+tree4[0].text_content(), font=font, fill="#00FF00")
+    y += font.getsize(tree4[0].text_content())[1] + 10
+    #draw.text((x, y), "LAST UPDATED:", font=font, fill="#FFFFFF")
+    #y += font.getsize("LAST UPDATED:")[1]
+    #draw.text((x, y), str(time.localtime), font=font, fill="#FFFFFF")
     # Display image.
     disp.image(image, rotation)
-    time.sleep(60)
+    time.sleep(5)
