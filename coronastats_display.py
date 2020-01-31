@@ -70,7 +70,7 @@ while True:
     tree3 = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
     tree4 = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
     update_time = time.localtime()
-    t = time.asctime(update_time) 
+    t = time.asctime(update_time)
     # Write four lines of text.
     y = top+5
     draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
@@ -87,7 +87,7 @@ while True:
     y += font.getsize(tree4[0].text_content())[1] + 10
     draw.text((x, y), "LAST UPDATED:", font=font, fill="#FFFFFF")
     y += font.getsize("LAST UPDATED:")[1]
-    draw.text((x, y), t, font=font, fill="#FFFFFF")
+    draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
     # Display image.
     disp.image(image, rotation)
     time.sleep(5)
