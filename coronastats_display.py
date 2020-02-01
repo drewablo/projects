@@ -76,11 +76,11 @@ while True:
     totalDeaths = source_code.xpath('//*[@id="maincounter-wrap"][2]/div/span')
     UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
     USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
-	
-	  TCdiff = str(totalCases - totalCasesPrevious)
-	  TDdiff = str(totalDeaths - totalDeathsPrevious)
-	  USCdiff = str(UScases - UScasesPrevious)
-	  USOdiff = str(USopenTests - USopenTestsPrevious)
+
+    TCdiff = str(totalCases - totalCasesPrevious)
+    TDdiff = str(totalDeaths - totalDeathsPrevious)
+    USCdiff = str(UScases - UScasesPrevious)
+    USOdiff = str(USopenTests - USopenTestsPrevious)
 	
     update_time = time.localtime()
     t = time.asctime(update_time)
@@ -104,8 +104,8 @@ while True:
     # Display image.
     disp.image(image, rotation)
 	
-	  totalCasesPrevious = totalCases
-	  totalDeathsPrevious = totalDeaths
-	  UScasesPrevious = UScases
-	  USopenTestsPrevious = USopenTests
+    totalCasesPrevious = totalCases
+    totalDeathsPrevious = totalDeaths
+    UScasesPrevious = UScases
+    USopenTestsPrevious = USopenTests
     time.sleep(60)
