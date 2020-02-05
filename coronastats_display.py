@@ -33,7 +33,7 @@ disp = st7789.ST7789(spi, cs=cs_pin, dc=dc_pin, rst=reset_pin, baudrate=BAUDRATE
 height = disp.height   # we swap height/width to rotate it to landscape!
 width = disp.width
 image = Image.new('RGB', (width, height))
-rotation = 0
+rotation = 270
 
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
