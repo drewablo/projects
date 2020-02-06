@@ -4,6 +4,7 @@ import re
 from lxml import html
 import digitalio
 import board
+from gpiozero import Button
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
@@ -18,6 +19,8 @@ UScasesChange = 0
 USopenChange = 0	
 
 previousSymbol = 0
+
+switcher = Button(23)
 
 # Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
 cs_pin = digitalio.DigitalInOut(board.CE0)
