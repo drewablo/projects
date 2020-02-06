@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import time
 import requests
 from lxml import html
@@ -108,4 +106,5 @@ while True:
     totalDeathsPrevious = totalDeaths
     UScasesPrevious = UScases
     USopenTestsPrevious = USopenTests
+    
     time.sleep(300)
