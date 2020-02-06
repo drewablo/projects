@@ -15,8 +15,8 @@ USopenTestsPrevious = 0
 
 totalCaseChange = 0
 totalDeathChange = 0
-UScasesChange = 0 
-USopenChange = 0	
+UScasesChange = 0
+USopenChange = 0
 
 previousSymbol = 0
 
@@ -81,54 +81,54 @@ def symbolUpdate(caseChange):
 	return previousSymbol
 	
 while True:
-    # Draw a black filled box to clear the image.
-    draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    response = requests.get("https://www.worldometers.info/coronavirus/")
-    response2 = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/cases-in-us.html")
-    
-    byte_data = response.content
-    byte_data2 = response2.content
-    
-    source_code = html.fromstring(byte_data) 
-    source_code2 = html.fromstring(byte_data2) 
-    
-    totalCases = source_code.xpath('//*[@id="maincounter-wrap"]/div/span')
-    totalDeaths = source_code.xpath('//*[@id="maincounter-wrap"][2]/div/span')
-    UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
-    USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
+	# Draw a black filled box to clear the image.
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
+	response = requests.get("https://www.worldometers.info/coronavirus/")
+	response2 = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/cases-in-us.html")
 
-    totalCasesReturn = totalCases[0].text_content()
-    totalDeathsReturn = totalDeaths[0].text_content()
-    UScasesReturn = UScases[0].text_content()
-    USopenTestsReturn = USopenTests[0].text_content()
-	
-	
-    totalCaseChange = int(re.findall("\d+",totalCasesReturn)[0]) - totalCasesPrevious
-    totalDeathChange = int(re.findall("\d+",totalDeathsReturn)[0]) - totalDeathsPrevious
-    UScasesChange = int(re.findall("\d+",UScasesReturn)[0]) - UScasesPrevious
-    USopenChange = int(re.findall("\d+",USopenTestsReturn)[0]) - USopenTestsPrevious
-	
-    update_time = time.localtime()
-    t = time.asctime(update_time)
-	
+	byte_data = response.content
+	byte_data2 = response2.content
+
+	source_code = html.fromstring(byte_data) 
+	source_code2 = html.fromstring(byte_data2) 
+
+	totalCases = source_code.xpath('//*[@id="maincounter-wrap"]/div/span')
+	totalDeaths = source_code.xpath('//*[@id="maincounter-wrap"][2]/div/span')
+	UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
+	USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
+
+	totalCasesReturn = totalCases[0].text_content()
+	totalDeathsReturn = totalDeaths[0].text_content()
+	UScasesReturn = UScases[0].text_content()
+	USopenTestsReturn = USopenTests[0].text_content()
+
+
+	totalCaseChange = int(re.findall("\d+",totalCasesReturn)[0]) - totalCasesPrevious
+	totalDeathChange = int(re.findall("\d+",totalDeathsReturn)[0]) - totalDeathsPrevious
+	UScasesChange = int(re.findall("\d+",UScasesReturn)[0]) - UScasesPrevious
+	USopenChange = int(re.findall("\d+",USopenTestsReturn)[0]) - USopenTestsPrevious
+
+	update_time = time.localtime()
+	t = time.asctime(update_time)
+
 	if totalCaseChange != 0 or totalDeathChange != 0 or UScasesChange !=0 or USopenChange !=0:
 		y = top+5
 		draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
 		y += font.getsize("CORONAVIRUS")[1] + 10
-		draw.text((x, y), "Total: " + totalCasesReturn + " " + symbolUpdate(totalCaseChange), font=font, fill="#FFFF00")
+		draw.text((x, y), symbolUpdate(totalCaseChange) + " Total: " + totalCasesReturn, font=font, fill="#FFFF00")
 		y += font.getsize(totalCasesReturn)[1]
-		draw.text((x, y), "Dead: " + totalDeathsReturn + " " + symbolUpdate(totalDeathChange), font=font, fill="#FF0000")
+		draw.text((x, y), symbolUpdate(totalDeathChange)+  " Dead: " + totalDeathsReturn, font=font, fill="#FF0000")
 		y += font.getsize(totalDeathsReturn)[1]
-		draw.text((x, y), "US Cases: " + UScasesReturn + " " + symbolUpdate(UScasesChange), font=font, fill="#FFa500")
+		draw.text((x, y), symbolUpdate(UScasesChange) + " US Cases: " + UScasesReturn, font=font, fill="#FFa500")
 		y += font.getsize(UScasesReturn)[1]
-		draw.text((x, y), "US Open Tests: " + USopenTestsReturn + symbolUpdate(USopenChange), font=font, fill="#00FF00")
+		draw.text((x, y), symbolUpdate(USopenChange) + " US Tests: " + USopenTestsReturn, font=font, fill="#00FF00")
 		y += font.getsize(USopenTestsReturn)[1] + 10
 		draw.text((x, y), "LAST CHANGE:", font=font, fill="#FFFFFF")
 		y += font.getsize("LAST CHANGE:")[1]
 		draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
 		# Display image.
 		disp.image(image, rotation)
-	
+
     totalCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
     totalDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
     UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
