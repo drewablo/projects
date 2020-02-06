@@ -1,5 +1,6 @@
 import time
 import requests
+import re
 from lxml import html
 import digitalio
 import board
@@ -9,8 +10,15 @@ import adafruit_rgb_display.st7789 as st7789
 totalCasesPrevious = 0
 totalDeathsPrevious = 0
 UScasesPrevious = 0
-USopenTests = 0
-	
+USopenTestsPrevious = 0
+
+totalCaseChange = 0
+totalDeathChange = 0
+UScasesChange = 0 
+USopenChange = 0	
+
+previousSymbol = 0
+
 # Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
 cs_pin = digitalio.DigitalInOut(board.CE0)
 dc_pin = digitalio.DigitalInOut(board.D25)
@@ -58,6 +66,17 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
+def symbolUpdate(caseChange):
+	global previousSymbol
+	if caseChange != 0:
+		if caseChange > 0:
+			previousSymbol = "\u25b2"
+		elif caseChange < 0:
+			previousSymbol = "\u25BE"
+	else:
+		previousSymbol = previousSymbol
+	return previousSymbol
+	
 while True:
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
@@ -75,36 +94,41 @@ while True:
     UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
     USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
 
-    TCdiff = str(totalCases - totalCasesPrevious)
-    TDdiff = str(totalDeaths - totalDeathsPrevious)
-    USCdiff = str(UScases - UScasesPrevious)
-    USOdiff = str(USopenTests - USopenTestsPrevious)
+    totalCasesReturn = totalCases[0].text_content()
+    totalDeathsReturn = totalDeaths[0].text_content()
+    UScasesReturn = UScases[0].text_content()
+    USopenTestsReturn = USopenTests[0].text_content()
+	
+	
+    totalCaseChange = int(re.findall("\d+",totalCasesReturn)[0]) - totalCasesPrevious
+    totalDeathChange = int(re.findall("\d+",totalDeathsReturn)[0]) - totalDeathsPrevious
+    UScasesChange = int(re.findall("\d+",UScasesReturn)[0]) - UScasesPrevious
+    USopenChange = int(re.findall("\d+",USopenTestsReturn)[0]) - USopenTestsPrevious
 	
     update_time = time.localtime()
     t = time.asctime(update_time)
 	
-    y = top+5
-    draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
-    y += font.getsize("CORONAVIRUS")[1]
-    draw.text((x, y), "TRACKER", font=font, fill="#FFFFFF")
-    y += font.getsize("TRACKER")[1] + 10
-    draw.text((x, y), "Total: "+totalCases[0].text_content()+" ("+TCdiff+")", font=font, fill="#FFFF00")
-    y += font.getsize(totalCases[0].text_content())[1]
-    draw.text((x, y), "Dead: "+totalDeaths[0].text_content()+" ("+TDdiff+")", font=font, fill="#FF0000")
-    y += font.getsize(totalDeaths[0].text_content())[1]
-    draw.text((x, y), "US Cases: "+UScases[0].text_content()+" ("+USCdiff+")", font=font, fill="#FFa500")
-    y += font.getsize(UScases[0].text_content())[1]
-    draw.text((x, y), "US Open Tests: "+USopenTests[0].text_content()+" ("+USOdiff+")", font=font, fill="#00FF00")
-    y += font.getsize(USopenTests[0].text_content())[1] + 10
-    draw.text((x, y), "LAST UPDATED:", font=font, fill="#FFFFFF")
-    y += font.getsize("LAST UPDATED:")[1]
-    draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
-    # Display image.
-    disp.image(image, rotation)
+	if totalCaseChange != 0 or totalDeathChange != 0 or UScasesChange !=0 or USopenChange !=0:
+		y = top+5
+		draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
+		y += font.getsize("CORONAVIRUS")[1] + 10
+		draw.text((x, y), "Total: " + totalCasesReturn + " " + symbolUpdate(totalCaseChange), font=font, fill="#FFFF00")
+		y += font.getsize(totalCasesReturn)[1]
+		draw.text((x, y), "Dead: " + totalDeathsReturn + " " + symbolUpdate(totalDeathChange), font=font, fill="#FF0000")
+		y += font.getsize(totalDeathsReturn)[1]
+		draw.text((x, y), "US Cases: " + UScasesReturn + " " + symbolUpdate(UScasesChange), font=font, fill="#FFa500")
+		y += font.getsize(UScasesReturn)[1]
+		draw.text((x, y), "US Open Tests: " + USopenTestsReturn + symbolUpdate(USopenChange), font=font, fill="#00FF00")
+		y += font.getsize(USopenTestsReturn)[1] + 10
+		draw.text((x, y), "LAST CHANGE:", font=font, fill="#FFFFFF")
+		y += font.getsize("LAST CHANGE:")[1]
+		draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
+		# Display image.
+		disp.image(image, rotation)
 	
-    totalCasesPrevious = totalCases
-    totalDeathsPrevious = totalDeaths
-    UScasesPrevious = UScases
-    USopenTestsPrevious = USopenTests
+    totalCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
+    totalDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
+    UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
+    USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
     
     time.sleep(300)
