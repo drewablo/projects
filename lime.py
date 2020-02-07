@@ -28,7 +28,7 @@ USopenChange = 0
 totalHospitalizationsChange = 0 
 
 previousSymbol = 0
-screenState = 1
+screenState = 2
 
 switcher = Button(23)
 
@@ -188,11 +188,17 @@ def fluStats():
 		draw.text((x, y), "INFLUENZA USA", font=font, fill="#FFFFFF")
 		y += font.getsize("INFLUENZA USA")[1] + 10
 		draw.text((x, y), "Infections: " + str(f'{averageNumbers(rawSickReturn):n}'), font=font, fill="#FFFF00")
-		y += font.getsize(str(f'{averageNumbers(rawSickReturn):n}'))[1]
+		y += font.getsize("Infections: ")[1]
+		draw.text((x, y), str(f'{averageNumbers(rawSickReturn):n}'), font=font, fill="#FFFF00")
+		y += font.getsize(str(f'{averageNumbers(rawSickReturn):n}'))[1]		
 		draw.text((x, y), "Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FF0000")
-		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]
-		draw.text((x, y), "Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FFa500")
-		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]+10
+		y += font.getsize("Hospitalizations: ")[1]
+		draw.text((x, y), str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FF0000")
+		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]		
+		draw.text((x, y), "Deaths: ", font=font, fill="#FFa500")
+		y += font.getsize("Deaths: ")[1]
+		draw.text((x, y), str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FFa500")
+		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]+10		
 		draw.text((x, y), "LAST CHANGE:", font=font, fill="#FFFFFF")
 		y += font.getsize("LAST CHANGE:")[1]
 		draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
@@ -214,6 +220,6 @@ while True:
 		if screenState == 1:
 			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			coronoaStats()		
-		elif screeState == 2:
+		elif screenState == 2:
 			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			fluStats()
