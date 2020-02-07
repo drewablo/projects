@@ -11,20 +11,24 @@ import adafruit_rgb_display.st7789 as st7789
 
 locale.setlocale(locale.LC_ALL, '')  # Use '' for auto, or force e.g. to 'en_US.UTF-8'
 
-global totalCasesPrevious = 0
-global totalDeathsPrevious = 0
-global UScasesPrevious = 0
-global USopenTestsPrevious = 0
-global totalHospitalizationsPrev = 0
+totalCoronaCasesPrevious = 0
+totalCoronaDeathsPrevious = 0
+totalFluCasesPrevious = 0
+totalFlueCasesPrevious = 0
+UScasesPrevious = 0
+USopenTestsPrevious = 0
+totalHospitalizationsPrev = 0
 
-global totalCaseChange = 0
-global totalDeathChange = 0
-global UScasesChange = 0 
-global USopenChange = 0	
-global totalHospitalizationsChange = 0 
+totalCoronaCaseChange = 0
+totalCoronaDeathChange = 0
+totalFluCaseChange = 0
+totalFluDeathChange = 0
+UScasesChange = 0 
+USopenChange = 0	
+totalHospitalizationsChange = 0 
 
-global previousSymbol = 0
-global screenState = 1
+previousSymbol = 0
+screenState = 1
 
 switcher = Button(23)
 
@@ -41,7 +45,7 @@ spi = board.SPI()
 
 # Create the ST7789 display:
 disp = st7789.ST7789(spi, cs=cs_pin, dc=dc_pin, rst=reset_pin, baudrate=BAUDRATE,
-                     width=240, height=240, x_offset=0, y_offset=80)
+width=240, height=240, x_offset=0, y_offset=80)
 
 # Create blank image for drawing.
 # Make sure to create image with mode 'RGB' for full color.
@@ -77,16 +81,21 @@ backlight.value = True
 
 def symbolUpdate(caseChange):
 	global previousSymbol
-	if caseChange != 0:
-		if caseChange > 0:
-			previousSymbol = "\u25b2"
-		elif caseChange < 0:
-			previousSymbol = "\u25BE"
-	else:
-		previousSymbol = previousSymbol
+		if caseChange != 0:
+			if caseChange > 0:
+				previousSymbol = "\u25b2"
+			elif caseChange < 0:
+				previousSymbol = "\u25BE"
+			else:
+				previousSymbol = previousSymbol
 	return previousSymbol
-	
+
 def coronoaStats():
+	global totalCoronaCasesPrevious
+	global totalCoronaDeathsPrevious
+	global UScasesPrevious
+	global USopenTestsPrevious
+	
 	response = requests.get("https://www.worldometers.info/coronavirus/")
 	response2 = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/cases-in-us.html")
 
@@ -108,8 +117,8 @@ def coronoaStats():
 	USopenTestsReturn = USopenTests[0].text_content()
 
 
-	totalCaseChange = int(re.findall("\d+",totalCasesReturn)[0]) - totalCasesPrevious
-	totalDeathChange = int(re.findall("\d+",totalDeathsReturn)[0]) - totalDeathsPrevious
+	totalCaseChange = int(re.findall("\d+",totalCasesReturn)[0]) - totalCoronaCasesPrevious
+	totalDeathChange = int(re.findall("\d+",totalDeathsReturn)[0]) - totalCoronaDeathsPrevious
 	UScasesChange = int(re.findall("\d+",UScasesReturn)[0]) - UScasesPrevious
 	USopenChange = int(re.findall("\d+",USopenTestsReturn)[0]) - USopenTestsPrevious
 
@@ -134,42 +143,47 @@ def coronoaStats():
 		# Display image.
 		disp.image(image, rotation)
 
-	totalCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
-	totalDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
+	totalCoronaCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
+	totalCoronaDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
 	UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
 	USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
 
 	time.sleep(5)
 
 def averageNumbers(xPathContent):
-    numbersList = re.findall("(?:^|\s)(\d*\.?\d+|\d{1,3}(?:,\d{3})*(?:\.\d+)?)(?!\S)",xPathContent)
-    # Credit where credit is due :https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
-    lowNumb = numbersList[0]
-    highNumb = numbersList[1]
-    avg = int((int(highNumb.replace(',', '')) + int(lowNumb.replace(',', '')))/2)
-    return avg
-	
-def fluStats():
-    response = requests.get("https://www.cdc.gov/flu/about/burden/preliminary-in-season-estimates.htm")
-    byte_data = response.content 
-    source_code = html.fromstring(byte_data) 
+	numbersList = re.findall("(?:^|\s)(\d*\.?\d+|\d{1,3}(?:,\d{3})*(?:\.\d+)?)(?!\S)",xPathContent)
+	# Credit where credit is due :https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
+	lowNumb = numbersList[0]
+	highNumb = numbersList[1]
+	avg = int((int(highNumb.replace(',', '')) + int(lowNumb.replace(',', '')))/2)
+	return avg
 
-    rawSick = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[2]/div[1]/div/div/h4/strong[1]")
-    rawHospital = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[1]/div/div/h4/strong[1]")
-    rawDeaths = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[2]/div/div/h4/strong[1]")
-    
-    rawSickReturn = rawSick[0].text_content()
-    rawHospitalReturn = rawHospital[0].text_content()
-    rawDeathsReturn = rawDeaths[0].text_content()
-    
-    update_time = time.localtime()
-    t = time.asctime(update_time)
-    
-    totalCaseChange = averageNumbers(rawSickReturn)- totalCasesPrevious
-    totalDeathChange = averageNumbers(rawHospitalReturn) - totalDeathsPrevious
-    totalHospitalizationsChange = averageNumbers(rawDeathsReturn)- totalHospitalizationsPrev
-    
-    if totalCaseChange != 0 or totalDeathChange != 0 or totalHospitalizationsChange !=0:
+def fluStats():
+
+	global totalFluCasesPrevious
+	global totalFlueCasesPrevious
+	global totalHospitalizationsPrev
+
+	response = requests.get("https://www.cdc.gov/flu/about/burden/preliminary-in-season-estimates.htm")
+	byte_data = response.content 
+	source_code = html.fromstring(byte_data) 
+
+	rawSick = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[2]/div[1]/div/div/h4/strong[1]")
+	rawHospital = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[1]/div/div/h4/strong[1]")
+	rawDeaths = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[2]/div/div/h4/strong[1]")
+
+	rawSickReturn = rawSick[0].text_content()
+	rawHospitalReturn = rawHospital[0].text_content()
+	rawDeathsReturn = rawDeaths[0].text_content()
+
+	update_time = time.localtime()
+	t = time.asctime(update_time)
+
+	totalCaseChange = averageNumbers(rawSickReturn)- totalFluCasesPrevious
+	totalDeathChange = averageNumbers(rawHospitalReturn) - totalFlueCasesPrevious
+	totalHospitalizationsChange = averageNumbers(rawDeathsReturn)- totalHospitalizationsPrev
+
+	if totalCaseChange != 0 or totalDeathChange != 0 or totalHospitalizationsChange !=0:
 		y = top+5
 		draw.text((x, y), "INFLUENZA USA", font=font, fill="#FFFFFF")
 		y += font.getsize("INFLUENZA USA")[1] + 10
@@ -184,16 +198,12 @@ def fluStats():
 		draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
 		# Display image.
 		disp.image(image, rotation)
-        print("Infections: " + str(f'{averageNumbers(rawSickReturn):n}'))
-        print("Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'))
-        print("Deaths: " + str(f'{averageNumbers(rawDeathsReturn):n}'))
-        print("LAST CHANGE: " + t[:-4])
-        
-    totalCasesPrevious = averageNumbers(rawSickReturn)
-    totalDeathsPrevious = averageNumbers(rawHospitalReturn)
-    totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
-    time.sleep(5)
-	
+
+	totalFluCasesPrevious = averageNumbers(rawSickReturn)
+	totalFlueCasesPrevious = averageNumbers(rawHospitalReturn)
+	totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
+	time.sleep(5)
+
 while True:
 	if switcher.is_pressed:
 		if screenState == 1:
