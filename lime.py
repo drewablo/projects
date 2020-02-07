@@ -11,20 +11,20 @@ import adafruit_rgb_display.st7789 as st7789
 
 locale.setlocale(locale.LC_ALL, '')  # Use '' for auto, or force e.g. to 'en_US.UTF-8'
 
-totalCasesPrevious = 0
-totalDeathsPrevious = 0
-UScasesPrevious = 0
-USopenTestsPrevious = 0
-totalHospitalizationsPrev = 0
+global totalCasesPrevious = 0
+global totalDeathsPrevious = 0
+global UScasesPrevious = 0
+global USopenTestsPrevious = 0
+global totalHospitalizationsPrev = 0
 
-totalCaseChange = 0
-totalDeathChange = 0
-UScasesChange = 0 
-USopenChange = 0	
-totalHospitalizationsChange = 0 
+global totalCaseChange = 0
+global totalDeathChange = 0
+global UScasesChange = 0 
+global USopenChange = 0	
+global totalHospitalizationsChange = 0 
 
-previousSymbol = 0
-screenState = 1
+global previousSymbol = 0
+global screenState = 1
 
 switcher = Button(23)
 
