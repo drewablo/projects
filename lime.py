@@ -98,7 +98,7 @@ def coronoaStats():
 
 	totalCases = source_code.xpath('//*[@id="maincounter-wrap"]/div/span')
 	totalDeaths = source_code.xpath('//*[@id="maincounter-wrap"][2]/div/span')
-	
+
 	UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
 	USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
 
@@ -134,13 +134,13 @@ def coronoaStats():
 		# Display image.
 		disp.image(image, rotation)
 
-    totalCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
-    totalDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
-    UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
-    USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
-    
-    time.sleep(5)
-	
+	totalCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
+	totalDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
+	UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
+	USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
+
+	time.sleep(5)
+
 def averageNumbers(xPathContent):
     numbersList = re.findall("(?:^|\s)(\d*\.?\d+|\d{1,3}(?:,\d{3})*(?:\.\d+)?)(?!\S)",xPathContent)
     # Credit where credit is due :https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
