@@ -81,13 +81,13 @@ backlight.value = True
 
 def symbolUpdate(caseChange):
 	global previousSymbol
-		if caseChange != 0:
-			if caseChange > 0:
-				previousSymbol = "\u25b2"
-			elif caseChange < 0:
-				previousSymbol = "\u25BE"
-			else:
-				previousSymbol = previousSymbol
+	if caseChange != 0:
+		if caseChange > 0:
+			previousSymbol = "\u25b2"
+		elif caseChange < 0:
+			previousSymbol = "\u25BE"
+		else:
+			previousSymbol = previousSymbol
 	return previousSymbol
 
 def coronoaStats():
