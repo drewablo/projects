@@ -1,6 +1,7 @@
 import time
 import requests
 import re
+import locale
 from lxml import html
 import digitalio
 import board
@@ -8,15 +9,19 @@ from gpiozero import Button
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
+locale.setlocale(locale.LC_ALL, '')  # Use '' for auto, or force e.g. to 'en_US.UTF-8'
+
 totalCasesPrevious = 0
 totalDeathsPrevious = 0
 UScasesPrevious = 0
 USopenTestsPrevious = 0
+totalHospitalizationsPrev = 0
 
 totalCaseChange = 0
 totalDeathChange = 0
-UScasesChange = 0
-USopenChange = 0
+UScasesChange = 0 
+USopenChange = 0	
+totalHospitalizationsChange = 0 
 
 previousSymbol = 0
 
@@ -80,9 +85,7 @@ def symbolUpdate(caseChange):
 		previousSymbol = previousSymbol
 	return previousSymbol
 	
-while True:
-	# Draw a black filled box to clear the image.
-	draw.rectangle((0, 0, width, height), outline=0, fill=0)
+def coronoaStats():
 	response = requests.get("https://www.worldometers.info/coronavirus/")
 	response2 = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/cases-in-us.html")
 
@@ -94,6 +97,7 @@ while True:
 
 	totalCases = source_code.xpath('//*[@id="maincounter-wrap"]/div/span')
 	totalDeaths = source_code.xpath('//*[@id="maincounter-wrap"][2]/div/span')
+	
 	UScases = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[1]/td')
 	USopenTests = source_code2.xpath('/html/body/div[6]/main/div[3]/div/div[3]/div[1]/div/div/div/div[2]/table/tbody/tr[3]/td')
 
@@ -134,4 +138,64 @@ while True:
     UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
     USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
     
-    time.sleep(300)
+    time.sleep(5)
+	
+def averageNumbers(xPathContent):
+    numbersList = re.findall("(?:^|\s)(\d*\.?\d+|\d{1,3}(?:,\d{3})*(?:\.\d+)?)(?!\S)",xPathContent)
+    # Credit where credit is due :https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
+    lowNumb = numbersList[0]
+    highNumb = numbersList[1]
+    avg = int((int(highNumb.replace(',', '')) + int(lowNumb.replace(',', '')))/2)
+    return avg
+	
+def fluStats():
+    response = requests.get("https://www.cdc.gov/flu/about/burden/preliminary-in-season-estimates.htm")
+    byte_data = response.content 
+    source_code = html.fromstring(byte_data) 
+
+    rawSick = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[2]/div[1]/div/div/h4/strong[1]")
+    rawHospital = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[1]/div/div/h4/strong[1]")
+    rawDeaths = source_code.xpath("/html/body/div[6]/main/div[3]/div/div[4]/div[3]/div[2]/div/div/h4/strong[1]")
+    
+    rawSickReturn = rawSick[0].text_content()
+    rawHospitalReturn = rawHospital[0].text_content()
+    rawDeathsReturn = rawDeaths[0].text_content()
+    
+    update_time = time.localtime()
+    t = time.asctime(update_time)
+    
+    totalCaseChange = averageNumbers(rawSickReturn)- totalCasesPrevious
+    totalDeathChange = averageNumbers(rawHospitalReturn) - totalDeathsPrevious
+    totalHospitalizationsChange = averageNumbers(rawDeathsReturn)- totalHospitalizationsPrev
+    
+    if totalCaseChange != 0 or totalDeathChange != 0 or totalHospitalizationsChange !=0:
+		y = top+5
+		draw.text((x, y), "INFLUENZA USA", font=font, fill="#FFFFFF")
+		y += font.getsize("INFLUENZA USA")[1] + 10
+		draw.text((x, y), "Infections: " + str(f'{averageNumbers(rawSickReturn):n}'), font=font, fill="#FFFF00")
+		y += font.getsize(str(f'{averageNumbers(rawSickReturn):n}'))[1]
+		draw.text((x, y), "Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FF0000")
+		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]
+		draw.text((x, y), "Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FFa500")
+		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]+10
+		draw.text((x, y), "LAST CHANGE:", font=font, fill="#FFFFFF")
+		y += font.getsize("LAST CHANGE:")[1]
+		draw.text((x, y), t[:-4], font=font, fill="#FFFFFF")
+		# Display image.
+		disp.image(image, rotation)
+        print("Infections: " + str(f'{averageNumbers(rawSickReturn):n}'))
+        print("Hospitalizations: " + str(f'{averageNumbers(rawHospitalReturn):n}'))
+        print("Deaths: " + str(f'{averageNumbers(rawDeathsReturn):n}'))
+        print("LAST CHANGE: " + t[:-4])
+        
+    totalCasesPrevious = averageNumbers(rawSickReturn)
+    totalDeathsPrevious = averageNumbers(rawHospitalReturn)
+    totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
+    time.sleep(5)
+	
+while True:
+	# Draw a black filled box to clear the image.
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
+	fluStats()
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
+	coronoaStats()
