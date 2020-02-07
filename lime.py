@@ -24,6 +24,7 @@ USopenChange = 0
 totalHospitalizationsChange = 0 
 
 previousSymbol = 0
+screenState = 1
 
 switcher = Button(23)
 
@@ -194,8 +195,15 @@ def fluStats():
     time.sleep(5)
 	
 while True:
-	# Draw a black filled box to clear the image.
-	draw.rectangle((0, 0, width, height), outline=0, fill=0)
-	fluStats()
-	draw.rectangle((0, 0, width, height), outline=0, fill=0)
-	coronoaStats()
+	if switcher.is_pressed:
+		if screenState == 1:
+			screenState = 2
+		elif screenState == 2:
+			screenState = 1
+	else:
+		if screenState == 1:
+			draw.rectangle((0, 0, width, height), outline=0, fill=0)
+			coronoaStats()		
+		elif screeState == 2:
+			draw.rectangle((0, 0, width, height), outline=0, fill=0)
+			fluStats()
