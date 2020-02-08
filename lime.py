@@ -148,7 +148,7 @@ def coronoaStats():
 	UScasesPrevious = int(re.findall("\d+",UScasesReturn)[0])
 	USopenTestsPrevious = int(re.findall("\d+",USopenTestsReturn)[0])
 
-	time.sleep(5)
+	time.sleep(.1)
 
 def averageNumbers(xPathContent):
 	numbersList = re.findall("(?:^|\s)(\d*\.?\d+|\d{1,3}(?:,\d{3})*(?:\.\d+)?)(?!\S)",xPathContent)
@@ -208,7 +208,7 @@ def fluStats():
 	totalFluCasesPrevious = averageNumbers(rawSickReturn)
 	totalFlueCasesPrevious = averageNumbers(rawHospitalReturn)
 	totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
-	time.sleep(5)
+	time.sleep(.1)
 
 while True:
 	if switcher.is_pressed:
