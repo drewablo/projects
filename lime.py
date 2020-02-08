@@ -1,4 +1,4 @@
-from time import time
+import time
 import requests
 import re
 import locale
@@ -83,10 +83,10 @@ class Timer:
 		self.timer_period = timer_period
 		self.update_timer()
 	def update_timer(self):
-		self.last_time = time()
+		self.last_time = time.time()
 		self.timer_expires = self.last_time + self.timer_period
 	def has_timer_expired(self):
-		if time() > self.timer_expires:
+		if time.time() > self.timer_expires:
 			self.update_timer()
 			return 1
 		else:
@@ -221,17 +221,20 @@ def fluStats():
 		totalFluCasesPrevious = averageNumbers(rawSickReturn)
 		totalFlueCasesPrevious = averageNumbers(rawHospitalReturn)
 		totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
+def buttonPress():
+	global screenState
+	if screenState == 1:
+		screenState = 2
+	elif screenState == 2:
+		screenState = 1	
+	return screenState
 
 while True:
-	if switcher.is_pressed:
-		if screenState == 1:
-			screenState = 2
-		elif screenState == 2:
-			screenState = 1
-	else:
-		if screenState == 1:
-			draw.rectangle((0, 0, width, height), outline=0, fill=0)
-			coronoaStats()		
-		elif screenState == 2:
-			draw.rectangle((0, 0, width, height), outline=0, fill=0)
-			fluStats()
+	switcher.when_pressed = buttonPress
+	
+	if screenState == 1:
+		draw.rectangle((0, 0, width, height), outline=0, fill=0)
+		coronoaStats()		
+	elif screenState == 2:
+		draw.rectangle((0, 0, width, height), outline=0, fill=0)
+		fluStats()
