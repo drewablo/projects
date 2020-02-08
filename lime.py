@@ -138,7 +138,7 @@ def coronoaStats():
 
 	update_time = time.localtime()
 	t = time.asctime(update_time)
-	
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
 	y = top+5
 	draw.text((x, y), "CORONAVIRUS", font=font, fill="#FFFFFF")
 	y += font.getsize("CORONAVIRUS")[1] + 10
@@ -192,7 +192,7 @@ def fluStats():
 	totalCaseChange = averageNumbers(rawSickReturn)- totalFluCasesPrevious
 	totalDeathChange = averageNumbers(rawHospitalReturn) - totalFlueCasesPrevious
 	totalHospitalizationsChange = averageNumbers(rawDeathsReturn)- totalHospitalizationsPrev
-
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
 	y = top+5
 	draw.text((x, y), "INFLUENZA USA", font=font, fill="#FFFFFF")
 	y += font.getsize("INFLUENZA USA")[1] + 4
@@ -238,9 +238,7 @@ while True:
 	switcher.when_pressed = buttonPress
 	if screenState == True:
 		if timer.has_timer_expired():
-			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			coronoaStats()		
 	elif screenState == False:
 		if timer.has_timer_expired():
-			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			fluStats()
