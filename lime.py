@@ -28,7 +28,7 @@ USopenChange = 0
 totalHospitalizationsChange = 0 
 
 previousSymbol = 0
-screenState = 2
+screenState = False
 
 switcher = Button(23)
 
@@ -223,11 +223,12 @@ def fluStats():
 		totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
 def buttonPress():
 	global screenState
-	if screenState == 1:
-		screenState = 2
-	elif screenState == 2:
-		screenState = 1	
-	return screenState
+	if screenState == True:
+		screenState = False
+		return screenState		
+	elif screenState == False:
+		screenState = True	
+		return screenState
 
 while True:
 	switcher.when_pressed = buttonPress
