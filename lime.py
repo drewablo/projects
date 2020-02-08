@@ -191,13 +191,13 @@ def fluStats():
 		y += font.getsize("Infections: ")[1]
 		draw.text((x, y), str(f'{averageNumbers(rawSickReturn):n}'), font=font, fill="#FFFF00")
 		y += font.getsize(str(f'{averageNumbers(rawSickReturn):n}'))[1]+2
-		draw.text((x, y), "Deaths: ", font=font, fill="#FFa500")
+		draw.text((x, y), "Deaths: ", font=font, fill="#FF0000")
 		y += font.getsize("Deaths: ")[1]
-		draw.text((x, y), str(f'{averageNumbers(rawDeathsReturn):n}'), font=font, fill="#FFa500")
+		draw.text((x, y), str(f'{averageNumbers(rawDeathsReturn):n}'), font=font, fill="#FF0000")
 		y += font.getsize(str(f'{averageNumbers(rawDeathsReturn):n}'))[1]+2		
-		draw.text((x, y), "Hospitalizations: ", font=font, fill="#FF0000")
+		draw.text((x, y), "Hospitalizations: ", font=font, fill="#FFa500")
 		y += font.getsize("Hospitalizations: ")[1]
-		draw.text((x, y), str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FF0000")
+		draw.text((x, y), str(f'{averageNumbers(rawHospitalReturn):n}'), font=font, fill="#FFa500")
 		y += font.getsize(str(f'{averageNumbers(rawHospitalReturn):n}'))[1]+4				
 		draw.text((x, y), "LAST CHANGE:", font=font, fill="#FFFFFF")
 		y += font.getsize("LAST CHANGE:")[1]
