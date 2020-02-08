@@ -232,10 +232,9 @@ def buttonPress():
 
 while True:
 	switcher.when_pressed = buttonPress
-	
-	if screenState == 1:
+	if screenState == True:
 		draw.rectangle((0, 0, width, height), outline=0, fill=0)
 		coronoaStats()		
-	elif screenState == 2:
+	elif screenState == False:
 		draw.rectangle((0, 0, width, height), outline=0, fill=0)
 		fluStats()
