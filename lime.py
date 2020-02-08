@@ -221,6 +221,7 @@ def fluStats():
 	totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
 def buttonPress():
 	global screenState
+	print("Button Pressed")
 	if screenState == True:
 		screenState = False
 		return screenState		
