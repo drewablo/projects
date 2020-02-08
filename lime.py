@@ -224,9 +224,11 @@ def buttonPress():
 	print("Button Pressed")
 	if screenState == True:
 		screenState = False
+		print(screenState)
 		return screenState		
 	elif screenState == False:
-		screenState = True	
+		screenState = True
+		print(screenState)
 		return screenState
 
 while True:
