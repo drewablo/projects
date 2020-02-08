@@ -224,12 +224,12 @@ def buttonPress():
 	disp.image(image)
 	print("Button Pressed: " + str(screenState))
 	if screenState == True:
-		fluStats()
+		coronoaStats()
 		screenState = False
 		print(screenState)
 		return screenState		
 	elif screenState == False:
-		coronoaStats()
+		fluStats()
 		screenState = True
 		print(screenState)
 		return screenState
