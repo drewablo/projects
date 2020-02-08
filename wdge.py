@@ -111,6 +111,14 @@ def coronoaStats():
 	global totalCoronaDeathsPrevious
 	global UScasesPrevious
 	global USopenTestsPrevious
+	global totalCasesReturn
+	global totalDeathsReturn
+	global UScasesReturn
+	global USopenTestsReturn
+	global totalCaseChange
+	global totalDeathChange
+	global UScasesChange
+	global USopenChange
 	
 	response = requests.get("https://www.worldometers.info/coronavirus/")
 	response2 = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/cases-in-us.html")
@@ -141,8 +149,6 @@ def coronoaStats():
 
 	update_time = time.localtime()
 	t = time.asctime(update_time)
-	
-
 
 	totalCoronaCasesPrevious = int(re.findall("\d+",totalCasesReturn)[0])
 	totalCoronaDeathsPrevious = int(re.findall("\d+",totalDeathsReturn)[0])
@@ -180,9 +186,6 @@ def averageNumbers(xPathContent):
 	return avg
 
 def fluStats():
-	global totalFluCasesPrevious
-	global totalFlueCasesPrevious
-	global totalHospitalizationsPrev
 	global rawSickReturn
 	global rawDeathsReturn
 	global rawHospitalReturn
@@ -201,16 +204,6 @@ def fluStats():
 
 	update_time = time.localtime()
 	t = time.asctime(update_time)
-
-	totalCaseChange = averageNumbers(rawSickReturn)- totalFluCasesPrevious
-	totalDeathChange = averageNumbers(rawHospitalReturn) - totalFlueCasesPrevious
-	totalHospitalizationsChange = averageNumbers(rawDeathsReturn)- totalHospitalizationsPrev
-
-	fluDraw()
-
-	totalFluCasesPrevious = averageNumbers(rawSickReturn)
-	totalFlueCasesPrevious = averageNumbers(rawHospitalReturn)
-	totalHospitalizationsPrev = averageNumbers(rawDeathsReturn)
 	
 def fluDraw():
 	global rawSickReturn
@@ -240,12 +233,14 @@ def fluDraw():
 	
 def buttonPress():
 	global screenState
-	print("Button Pressed: " + screenState)
+	print("Button Pressed: " + str(screenState))
 	if screenState == True:
+		fluDraw()
 		screenState = False
 		print(screenState)
 		return screenState		
 	elif screenState == False:
+		coronaDraw()
 		screenState = True
 		print(screenState)
 		return screenState
