@@ -220,7 +220,7 @@ def fluStats():
 	
 def buttonPress():
 	global screenState
-	print("Button Pressed")
+	print("Button Pressed: " = screenState)
 	if screenState == True:
 		screenState = False
 		print(screenState)
