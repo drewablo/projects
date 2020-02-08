@@ -220,16 +220,13 @@ def fluStats():
 	
 def buttonPress():
 	global screenState
+	draw.rectangle((0, 0, width, height), outline=0, fill=0)
 	print("Button Pressed: " + str(screenState))
 	if screenState == True:
-		draw.rectangle((0, 0, width, height), outline=0, fill="#000000")
-		fluStats()
 		screenState = False
 		print(screenState)
 		return screenState		
 	elif screenState == False:
-		draw.rectangle((0, 0, width, height), outline=0, fill="#000000")
-		coronoaStats()
 		screenState = True
 		print(screenState)
 		return screenState
@@ -238,9 +235,9 @@ while True:
 	switcher.when_pressed = buttonPress
 	if screenState == True:
 		if timer.has_timer_expired():
-			draw.rectangle((0, 0, width, height), outline=0, fill="#000000")
+			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			coronoaStats()		
 	elif screenState == False:
 		if timer.has_timer_expired():
-			draw.rectangle((0, 0, width, height), outline=0, fill="#000000")
+			draw.rectangle((0, 0, width, height), outline=0, fill=0)
 			fluStats()
