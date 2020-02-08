@@ -105,7 +105,7 @@ def symbolUpdate(caseChange):
 			previousSymbol = previousSymbol
 	return previousSymbol
 
-def coronoaStats():
+def coronaStats():
 	global totalCoronaCasesPrevious
 	global totalCoronaDeathsPrevious
 	global UScasesPrevious
@@ -224,13 +224,13 @@ def buttonPress():
 	disp.image(image)
 	print("Button Pressed: " + str(screenState))
 	if screenState == True:
-		coronoaStats()
 		screenState = False
+		fluStats()
 		print(screenState)
 		return screenState		
 	elif screenState == False:
-		fluStats()
 		screenState = True
+		coronaStats()
 		print(screenState)
 		return screenState
 
@@ -238,7 +238,7 @@ while True:
 	switcher.when_pressed = buttonPress
 	if screenState == True:
 		if timer.has_timer_expired():
-			coronoaStats()		
+			coronaStats()		
 	elif screenState == False:
 		if timer.has_timer_expired():
 			fluStats()
