@@ -83,16 +83,16 @@ class Timer:
 		self.timer_period = timer_period
 		self.update_timer()
 	def update_timer(self):
-		self.last_time = time()*100
+		self.last_time = time()
 		self.timer_expires = self.last_time + self.timer_period
 	def has_timer_expired(self):
-		if time()*100 > self.timer_expires:
+		if time() > self.timer_expires:
 			self.update_timer()
 			return 1
 		else:
 			return 0
 
-timer = Timer(500)
+timer = Timer(5)
 
 def symbolUpdate(caseChange):
 	global previousSymbol
