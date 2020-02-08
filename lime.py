@@ -220,13 +220,16 @@ def fluStats():
 	
 def buttonPress():
 	global screenState
-	draw.rectangle((0, 0, width, height), outline=0, fill=0)
+	draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
+	disp.image(image)
 	print("Button Pressed: " + str(screenState))
 	if screenState == True:
+		fluStats()
 		screenState = False
 		print(screenState)
 		return screenState		
 	elif screenState == False:
+		coronoaStats()
 		screenState = True
 		print(screenState)
 		return screenState
