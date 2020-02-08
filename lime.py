@@ -222,10 +222,12 @@ def buttonPress():
 	global screenState
 	print("Button Pressed: " + screenState)
 	if screenState == True:
+		fluStats()
 		screenState = False
 		print(screenState)
 		return screenState		
 	elif screenState == False:
+		coronoaStats()
 		screenState = True
 		print(screenState)
 		return screenState
